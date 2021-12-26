@@ -143,6 +143,27 @@ class Qoo10API
     }
 
     /**
+     * オプション在庫を更新
+     */
+    public function UpdateInventoryDataUnit($SellerCode, $Name1, $Value1, $Name2, $Value2, $Price, $Qty){
+        $data = array();
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsOptions.UpdateInventoryDataUnit";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+        $data["OptionName"] = $Name1 . "||*" . $Name2;
+        $data["OptionValue"] = $Value1 . "||*" . $Value2;
+        $data["OptionCode"] = "";
+        $data["Price"] = $Price;
+        $data["Qty"] = $Qty;
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          return true;
+        }
+        return false;
+    }
+
+    /**
      * 出荷状態情報照会
      * ShippingStat:配送状態。（1：出荷待ち、2：出荷済み、3：発注確認、4：配送中、5：配送完了）
      * search_condition:日付の種類。（1：注文日、2：決済完了日、3：配送日、4：配送完了日）
@@ -185,12 +206,24 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test = new Qoo10API();
   $test->var_dump();
 
-  
+  /*
   $order = $test->GetShippingAndClaimInfoByOrderNo_V2(698016773);
   var_dump($order);
+  */
   /*
   $ret = $test->GetShippingInfo_v2("","1");
   var_dump($ret);
+  */
+
+  /*
+  $options = $test->GetGoodsInventoryInfo("10000001");
+  var_dump($options);
+  $test->InsertInventoryDataUnit("10000001","サイズ", "70cm", "カラー", "グレー", 0, 5);
+  var_dump($options);
+  $options = $test->GetGoodsInventoryInfo("10000001");
+  var_dump($options);
+  $test->InsertInventoryDataUnit("10000001","サイズ", "70cm", "カラー", "グレー", 0, 7);
+  var_dump($options);
   */
 
   /*
