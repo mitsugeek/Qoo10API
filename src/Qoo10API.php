@@ -23,6 +23,9 @@ class Qoo10API
         $this->HanbaiAPIKey = $this->CreateCertificationKey();
     }
 
+    /**
+     * 確認用
+     */
     public function var_dump() {
         var_dump($this);
     }
@@ -62,9 +65,29 @@ class Qoo10API
         return "";
     }
 
+    /**
+     * 商品情報照会
+     */
+    public function GetItemDetailInfo($SellerCode){
+        $data = array();
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsLookup.GetItemDetailInfo";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          if(count($ret["ResultObject"]) == 1){
+            return $ret["ResultObject"][0];
+          }
+        }
+        return "";
+    }
 }
 
 if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test = new Qoo10API();
   $test->var_dump();
+
+  $item = $test->GetItemDetailInfo("10000001");
+  var_dump($item);
 }
