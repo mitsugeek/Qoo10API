@@ -163,14 +163,36 @@ class Qoo10API
         return $ret;
     }
 
+    /**
+     * 注文シングル件配送/クレーム情報照会
+     */
+    public function GetShippingAndClaimInfoByOrderNo_V2($OrderNo){
+        $data = array();
+        $data["returnType"] = "json";
+        $data["method"] = "ShippingBasic.GetShippingAndClaimInfoByOrderNo_V2";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["OrderNo"] = $OrderNo;
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          return $ret;
+        }
+        return $ret;
+    }
+
 }
 
 if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test = new Qoo10API();
   $test->var_dump();
 
+  
+  $order = $test->GetShippingAndClaimInfoByOrderNo_V2(698016773);
+  var_dump($order);
+  /*
   $ret = $test->GetShippingInfo_v2("","1");
   var_dump($ret);
+  */
+
   /*
   $options = $test->GetGoodsInventoryInfo("10000001");
   var_dump($options);
