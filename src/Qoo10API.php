@@ -275,6 +275,114 @@ class Qoo10API
     
 
     /**
+     * 商品のメイン画像変更
+     */
+    public function EditGoodsImage($SellerCode, $StandardImage){
+        // /GMKT.INC.Front.QAPIService/ebayjapan.qapi/ItemsContents.EditGoodsImage
+        $curl = curl_init();
+        $auth_url = "https://".$this->BASE_DOMAIN."/GMKT.INC.Front.QAPIService/ebayjapan.qapi/ItemsContents.EditGoodsImage";
+
+        $headers = array(
+            "QAPIVersion: 1.1",
+            "GiosisCertificationKey: ".$this->HanbaiAPIKey,
+        );
+        $data = array();
+        $data["v"] = "1.0";
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsContents.EditGoodsContents";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+        $data["StandardImage"] = $StandardImage;
+        $data["VideoURL"] = "";
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($curl, CURLOPT_URL, $auth_url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $ret =  json_decode($response,TRUE);
+
+        if($ret["ResultCode"] == 0){
+        return true;
+        } else {
+            var_dump($ret);
+        }
+        return false;
+
+    }
+    
+    /**
+     * 商品画像（メイン以外）変更
+     */
+    public function EditGoodsMultiImage($SellerCode, $urls){
+        $curl = curl_init();
+        $auth_url = "https://".$this->BASE_DOMAIN."/GMKT.INC.Front.QAPIService/ebayjapan.qapi/ItemsContents.EditGoodsMultiImage";
+
+        $headers = array(
+            "QAPIVersion: 1.1",
+            "GiosisCertificationKey: ".$this->HanbaiAPIKey,
+        );
+        $data = array();
+        $data["v"] = "1.0";
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsContents.EditGoodsContents";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+
+        $idx =1;
+        foreach($urls as $img){
+            if($idx > 11){
+              break;
+            }
+            $data["EnlargedImage".$idx] = $img;
+            $idx = $idx + 1;
+        }
+
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($curl, CURLOPT_URL, $auth_url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $ret =  json_decode($response,TRUE);
+
+        if($ret["ResultCode"] == 0){
+        return true;
+        } else {
+            var_dump($ret);
+        }
+        return false;
+
+    }
+/*
+Host: api.qoo10.jp
+POST 
+Content-Length: length
+Content-Type: application/x-www-form-urlencoded
+QAPIVersion: 1.0
+GiosisCertificationKey: [Seller Authorization Key]
+ 
+returnType: [text/xml] or [application/json] (Optional)
+ItemCode:String
+SellerCode:String
+EnlargedImage1:String
+EnlargedImage2:String
+EnlargedImage3:String
+EnlargedImage4:String
+EnlargedImage5:String
+EnlargedImage6:String
+EnlargedImage7:String
+EnlargedImage8:String
+EnlargedImage9:String
+EnlargedImage10:String
+EnlargedImage11:String
+*/
+
+    /**
      * ItemsBasic.UpdateGoodsが動かない。
      */
     public function UpdateGoods($SellerCode, $ItemTitle){
