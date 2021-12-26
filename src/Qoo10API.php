@@ -142,7 +142,26 @@ class Qoo10API
         return false;
     }
 
-
+    /**
+     * 出荷状態情報照会
+     * ShippingStat:配送状態。（1：出荷待ち、2：出荷済み、3：発注確認、4：配送中、5：配送完了）
+     * search_condition:日付の種類。（1：注文日、2：決済完了日、3：配送日、4：配送完了日）
+     */
+    public function GetShippingInfo_v2($ShippingStat,$search_condition){
+        $data = array();
+        $data["returnType"] = "json";
+        $data["method"] = "ShippingBasic.GetShippingInfo_v2";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["ShippingStat"] = $ShippingStat;
+        $data["search_Sdate"] = date("YmdHis", strtotime("-89 day"));
+        $data["search_Edate"] = date('YmdHis');
+        $data["search_condition"] = $search_condition;
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          return $ret;
+        }
+        return $ret;
+    }
 
 }
 
@@ -150,6 +169,9 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test = new Qoo10API();
   $test->var_dump();
 
+  $ret = $test->GetShippingInfo_v2("","1");
+  var_dump($ret);
+  /*
   $options = $test->GetGoodsInventoryInfo("10000001");
   var_dump($options);
   
@@ -166,6 +188,6 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
 
   $options = $test->GetGoodsInventoryInfo("10000001");
   var_dump($options);
-
+*/
 
 }
