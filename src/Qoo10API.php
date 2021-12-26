@@ -82,6 +82,22 @@ class Qoo10API
         }
         return "";
     }
+
+    /**
+     * 販売商品の組合せ型オプション情報照会
+     */
+    public function GetGoodsInventoryInfo($SellerCode){
+        $data = array();
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsLookup.GetGoodsInventoryInfo";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          return $ret["ResultObject"];
+        }
+        return "";
+    }
 }
 
 if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
@@ -89,5 +105,8 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test->var_dump();
 
   $item = $test->GetItemDetailInfo("10000001");
+  var_dump($item);
+
+  $item = $test->GetGoodsInventoryInfo("10000001");
   var_dump($item);
 }
