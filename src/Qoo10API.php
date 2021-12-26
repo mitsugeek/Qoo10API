@@ -235,6 +235,25 @@ class Qoo10API
         return false;
     }
 
+    /**
+     * 商品詳細更新
+     */
+    public function EditGoodsContents($SellerCode, $Contents){
+        $data = array();
+        $data["v"] = "1.0";
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsContents.EditGoodsContents";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+        $data["Contents"] = $Contents;
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          return true;
+        } else {
+            var_dump($ret);
+        }
+        return false;
+    }
     
 
     /**
@@ -329,9 +348,12 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test = new Qoo10API();
   $test->var_dump();
 
+  $ret = $test->EditGoodsContents("10000001", "test");
+
   
-  $ret = $test->SetGoodsPriceQty("10000001", "3210");
   var_dump($ret);
+  //$ret = $test->SetGoodsPriceQty("10000001", "3210");
+  //var_dump($ret);
   //$ret = $test->GetItemDetailInfo("10000001");
   //var_dump($ret["ItemTitle"]);
   //$test->UpdateGoods("10000001", "子供服 カバーオール 男の子 女の子 長袖【裏起毛ニット風動物フェアアイル柄ベビー 長袖ロンパース");
