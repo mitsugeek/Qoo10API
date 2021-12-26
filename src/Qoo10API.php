@@ -291,7 +291,8 @@ class Qoo10API
         $data["returnType"] = "json";
         $data["method"] = "ItemsContents.EditGoodsImage";
         $data["key"] = $this->HanbaiAPIKey;
-        $data["ItemCode"] = "";
+        $item = $this->GetItemDetailInfo($SellerCode);
+        $data["ItemCode"] = $item["ItemCode"];
         $data["SellerCode"] = $SellerCode;
         $data["StandardImage"] = $StandardImage;
         $data["VideoURL"] = "";
