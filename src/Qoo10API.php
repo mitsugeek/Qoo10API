@@ -21,6 +21,9 @@ class Qoo10API
         $this->USER_ID = $ini["USER_ID"];
         $this->USER_PWD = $ini["USER_PWD"];
         $this->HanbaiAPIKey = $this->CreateCertificationKey();
+        if(!$this->HanbaiAPIKey){
+            $this->HanbaiAPIKey = $this->CreateCertificationKey();
+        }
     }
 
     /**
@@ -61,6 +64,8 @@ class Qoo10API
         $ret = $this->APIExec($data);
         if($ret["ResultCode"] == 0){
           return $ret["ResultObject"];
+        } else {
+            var_dump($ret);
         }
         return "";
     }
@@ -98,15 +103,69 @@ class Qoo10API
         }
         return "";
     }
+
+    /**
+     * オプション在庫を削除
+     */
+    public function EditGoodsInventory($SellerCode){
+        $data = array();
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsOptions.EditGoodsInventory";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+        $data["InventoryInfo"] = "";
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          return true;
+        }
+        return false;
+    }
+
+    /**
+     * オプション在庫を追加
+     */
+    public function InsertInventoryDataUnit($SellerCode, $Name1, $Value1, $Name2, $Value2, $Price, $Qty){
+        $data = array();
+        $data["returnType"] = "json";
+        $data["method"] = "ItemsOptions.InsertInventoryDataUnit";
+        $data["key"] = $this->HanbaiAPIKey;
+        $data["SellerCode"] = $SellerCode;
+        $data["OptionName"] = $Name1 . "||*" . $Name2;
+        $data["OptionValue"] = $Value1 . "||*" . $Value2;
+        $data["OptionCode"] = "";
+        $data["Price"] = $Price;
+        $data["Qty"] = $Qty;
+        $ret = $this->APIExec($data);
+        if($ret["ResultCode"] == 0){
+          return true;
+        }
+        return false;
+    }
+
+
+
 }
 
 if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test = new Qoo10API();
   $test->var_dump();
 
-  $item = $test->GetItemDetailInfo("10000001");
-  var_dump($item);
+  $options = $test->GetGoodsInventoryInfo("10000001");
+  var_dump($options);
+  
+  $ret = $test->EditGoodsInventory("10000001");
+  var_dump($ret);
 
-  $item = $test->GetGoodsInventoryInfo("10000001");
-  var_dump($item);
+  $options = $test->GetGoodsInventoryInfo("10000001");
+  var_dump($options);
+
+  $test->InsertInventoryDataUnit("10000001","サイズ", "70cm", "カラー", "グレー", 0, 7);
+  $test->InsertInventoryDataUnit("10000001","サイズ", "70cm", "カラー", "レッド", 0, 4);
+  $test->InsertInventoryDataUnit("10000001","サイズ", "80cm", "カラー", "グレー", 0, 2);
+  $test->InsertInventoryDataUnit("10000001","サイズ", "80cm", "カラー", "レッド", 0, 0);
+
+  $options = $test->GetGoodsInventoryInfo("10000001");
+  var_dump($options);
+
+
 }
