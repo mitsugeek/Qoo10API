@@ -159,6 +159,8 @@ class Qoo10API
         $ret = $this->APIExec($data);
         if($ret["ResultCode"] == 0){
           return true;
+        } else {
+            var_dump($ret);
         }
         return false;
     }
