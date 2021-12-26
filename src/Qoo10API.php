@@ -47,7 +47,6 @@ class Qoo10API
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);
-        var_dump($response);
         curl_close($curl);
         return json_decode($response,TRUE);
     }
