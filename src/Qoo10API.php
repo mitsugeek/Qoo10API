@@ -289,7 +289,7 @@ class Qoo10API
         $data = array();
         $data["v"] = "1.0";
         $data["returnType"] = "json";
-        $data["method"] = "ItemsContents.EditGoodsContents";
+        $data["method"] = "ItemsContents.EditGoodsImage";
         $data["key"] = $this->HanbaiAPIKey;
         $data["SellerCode"] = $SellerCode;
         $data["StandardImage"] = $StandardImage;
@@ -327,7 +327,7 @@ class Qoo10API
         $data = array();
         $data["v"] = "1.0";
         $data["returnType"] = "json";
-        $data["method"] = "ItemsContents.EditGoodsContents";
+        $data["method"] = "ItemsContents.EditGoodsMultiImage";
         $data["key"] = $this->HanbaiAPIKey;
         $data["SellerCode"] = $SellerCode;
 
