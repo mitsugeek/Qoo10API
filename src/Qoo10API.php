@@ -47,9 +47,11 @@ class Qoo10API
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);
+        var_dump($response);
         curl_close($curl);
         return json_decode($response,TRUE);
     }
+
 
     /**
      * 販売認証キー発行
@@ -239,6 +241,14 @@ class Qoo10API
      * 商品詳細更新
      */
     public function EditGoodsContents($SellerCode, $Contents){
+
+        $curl = curl_init();
+        $auth_url = "https://".$this->BASE_DOMAIN."/GMKT.INC.Front.QAPIService/ebayjapan.qapi/ItemsContents.EditGoodsContents";
+
+        $headers = array(
+            "QAPIVersion: 1.0",
+            "GiosisCertificationKey: ".$this->HanbaiAPIKey,
+        );
         $data = array();
         $data["v"] = "1.0";
         $data["returnType"] = "json";
@@ -246,7 +256,18 @@ class Qoo10API
         $data["key"] = $this->HanbaiAPIKey;
         $data["SellerCode"] = $SellerCode;
         $data["Contents"] = $Contents;
-        $ret = $this->APIExec($data);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($curl, CURLOPT_URL, $auth_url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        var_dump($response);
+        curl_close($curl);
+        $ret =  json_decode($response,TRUE);
+        
+        var_dump($ret);
         if($ret["ResultCode"] == 0){
           return true;
         } else {
@@ -348,10 +369,7 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) == realpath(__FILE__)){
   $test = new Qoo10API();
   $test->var_dump();
 
-  $ret = $test->EditGoodsContents("10000001", "test");
-
   
-  var_dump($ret);
   //$ret = $test->SetGoodsPriceQty("10000001", "3210");
   //var_dump($ret);
   //$ret = $test->GetItemDetailInfo("10000001");
